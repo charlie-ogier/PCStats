@@ -1,0 +1,682 @@
+' Gambas class file
+
+' 28/11/2015 PCStats Version 0.0.65 released on gambas.guru
+' 29/11/2015 Added delay options for system polling and various extra traps to prevent errors, limited support added for Raspberry pi V0.0.66
+' 30/11/2015 Bug removed from Swapon routine - just one space ahhh! Naming of drives change to partitions as sometimes...V0.0.67 
+' 02/12/2015 Bug removed that caused problems with countries that use a comma as a decimal separator V0.0.68
+' 05/12/2015 Bug removed that appeared due to mpstat -A having extra time zone info in the output V0.0.69
+' 05/12/2015 Changed Ram used to mirror the standard way this is shown V0.0.70
+' 06/12/2015 Rewritten psGetProcessorUsage to, hopefully, eliminate errors V0.0.71
+' 10/12/2015 Added 'More details' V0.0.71
+' 12/12/2015 Further changes to 'More Details' V0.0.72
+' 14/12/2015 Rewrite of psGetSwapFileDetails - V0.0.73
+' 22/12/2015 Processor detail collection now setup as a background task V0.1.0
+' 24/12/2015 inxi now not needed to be installed as included with program. Loads of code removed V 0.2.0
+' 24/12/2015 Faster start up, changed defaults V0.2.1
+' 28/12/2015 Added extra Poll time option V0.2.2
+' 14/01/2016 Update About details. Released on Gambas Farm V0.3.0
+
+Public sDriveString As New String[10, 5]    'To hold drive details
+Public siDriveCount As Short                'How many drives found
+Public siProgressH As Short                 'Thickness of progressbars
+Public iColourUsed As Integer               'Used colour
+Public iColourFree As Integer               'Free colour
+Public bMpstatInstalled As Boolean          'Is mpstat installed? 
+Public bDuplicateTrigger As Boolean         'Drive names the same?
+Public bDontShowDependencies As Boolean     'Show (or don't) the Dependencies form
+Public siPoll As Short                      'How often does the progam poll the system
+Public sCPU As String                       'To store CPU data
+Public bCloseControl As Boolean             'To control form closure
+Public pProcess As Process                  'To control the sCPU process
+Public siCounter As Short                   'Count the amount of times there is no sCPU data from the mpstat read process
+Public bTimerTrigger As Boolean             'Allows for the change of polling when resizing the SettingsForm 
+Public sPath As String = User.Home &/ "sCPU.info"
+Public sVersion As String = "PCStats Version 0.3.1"
+
+Public Sub form_Open()
+
+Application.MainWindow = Me
+psGetSettings
+psNotify
+psMpstat
+Timer1.Enabled = True
+Timer1.Delay = siPoll
+Timer1_Timer
+LabelVersion.text = sVersion
+If Not bDontShowDependencies Then Dependencies.Show
+
+End
+
+Public Sub psMpstat()
+Dim sTemp As String
+
+Shell "mpstat" Wait To sTemp
+If sTemp Then bMpstatInstalled = True
+
+End
+
+Public Sub Timer1_Timer()
+
+Try pProcess = Exec ["mpstat", "-P", "ALL", "1", "1"] For Read As "Contents"
+
+If Not bMpstatInstalled Then
+      HBoxD11.Height = 21 - siProgressH
+      LabelNoMpstat.Visible = True
+      LabelNoMpstat.text = "Please install 'sysstat' for CPU details" 
+      SeparatorCPUUsed.Background = iColourFree
+      SeparatorCPUFree.Background = iColourFree
+ Endif
+
+psGetSwapFileDetails
+  Wait
+psUptime
+  Wait
+psGetSystemDetails1 
+  Wait
+psMemory
+  Wait
+psDriveDetails
+  Wait
+psGridView
+  Wait
+psDisplayProgressBars
+  Wait
+psGetSwapFileDetails
+  Wait
+If Timer1.delay <> siPoll Then Timer1.delay = siPoll 'Smoothing effect off
+If bTimerTrigger Then 
+  Timer1.delay *= 5
+Else
+  Timer1.delay = siPoll
+End If
+  Wait
+
+End
+
+Public Sub Contents_Read()
+Dim sLine As String
+
+Read #Last, sLine, -256
+sCPU &= sLine
+
+End
+
+Public Sub Contents_Kill()
+
+psGetProcessorUsage
+
+End
+
+Public Sub psNotify()
+Dim sNotify As String
+
+If Not Exist(User.Home &/ ".local/share/PCStats") Then 'A place to store the program's icon
+  Mkdir User.Home &/ ".local/share/PCStats"
+Endif
+  
+If Not Exist(User.Home &/ ".local/share/PCStats/pcstats.png") Then 'If the icon is not here copy it here.
+  Copy "pcstats.png" To User.Home &/ ".local/share/PCStats/pcstats.png"
+Endif
+
+sNotify = "notify-send -i ~/.local/share/PCStats/pcstats.png PCStats " & Chr(34) & "Charlie Ogier software (c) 2015 " & Chr(34)
+Try Shell sNotify Wait
+
+End
+
+Public Sub psGetProcessorUsage()
+Dim sProcessor, sProcAverage As String
+Dim sEachCPU As New String[10]
+Dim siCount, siCount1, siCount2, siCPUCount As Short
+Dim hCPUTitle As Label[] = [LabelCPUTitle0, LabelCPUTitle1, LabelCPUTitle2, LabelCPUTitle3, LabelCPUTitle4, LabelCPUTitle5, LabelCPUTitle6, LabelCPUTitle7]
+Dim hCPUUseage As Label[] = [LabelCPU0, LabelCPU1, LabelCPU2, LabelCPU3, LabelCPU4, LabelCPU5, LabelCPU6, LabelCPU7]
+Dim sProsNo As String[] = [" 0 ", " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "]
+
+If Not InStr(sCpu, "%idle") Then Return
+
+LabelNoMpstat.Visible = False
+
+sCPU = Replace(sCPU, "\n\n", "\n")
+sCPU = psClean(sCPU)
+sCPU = psCleanCPUData(sCPU)
+siCount1 = InStr(sCPU, "all") + 4
+siCount2 = InStr(sCPU, " ", siCount1)
+sProcAverage = Trim(Mid(sCPU, siCount1, siCount2 - siCount1))
+sCPU = Mid(sCPU, InStr(sCPU, sProsNo[0]) - 1)
+
+Do
+  siCount1 = InStr(sCPU, sProsNo[siCount])
+  If siCount1 = 0 Then 
+    Dec siCount
+    Exit
+  End If
+  siCount2 = InStr(sCPU, " ", siCount1 + 3)
+  sEachCPU[siCount] = Trim(Mid(sCPU, siCount1 + 3, (siCount2 - siCount1) - 3))
+  If siCount = 7 Then Exit
+  Inc siCount
+Loop
+
+siCPUCount = siCount
+
+For siCount = 0 To siCPUCount
+  hCPUTitle[siCount].Text = "CPU " & Str(siCount) 
+  hCPUTitle[siCount].Expand = True
+  hCPUTitle[siCount].Font.bold = True
+  hCPUUseage[siCount].Text = sEachCPU[siCount] & "%"
+  hCPUUseage[siCount].Expand = True
+Next
+
+SeparatorCPUUsed.Width = psPercentage(Val(sProcAverage), HBoxD11.Width)
+SeparatorCPUUsed.Background = iColourUsed
+SeparatorCPUFree.Background = iColourFree
+HBoxD11.Height = 21 - siProgressH
+sProcAverage = Replace(sProcAverage, ",", ".")
+LabelCPUAvearge.text = " " & Format(sProcAverage, "0.00") & "% Utilised (Average)"
+
+Shell "cat /proc/cpuinfo" To sProcessor
+
+siCount1 = InStr(sProcessor, "model name")
+siCount2 = InStr(sProcessor, "\n", siCount1)
+sProcessor = Mid(sProcessor, siCount1, siCount2 - siCount1)
+siCount1 = InStr(sProcessor, ":")
+sProcessor = Trim(Mid(sProcessor, siCount1 + 1))
+LabelProcessor.text = "Processor"
+LabelProcessor.Font.bold = True
+LabelProcessorUsed.text = psRemoveDoubleSpaces(sProcessor)
+
+sCPU = ""
+
+End
+
+Public Sub psCleanCPUData(sDirty As String) As String
+Dim sTemp As String
+
+Repeat
+  sTemp = sDirty
+  sDirty = Replace(sDirty, "\t", "")
+  sDirty = Replace(sDirty, "  ", " ")
+Until sTemp = sDirty
+  
+Return sDirty ' Now very clean!
+
+End
+
+Public Sub psGetSwapFileDetails()
+Dim sPartitions, sTemp, sSwap, sSize, sUsed, sDev, sFree As String
+Dim sSplit As String[]
+Dim siSize, siUsed, siPercent, siDev, siFree1, siFree2, siCount, siHBoxLen As Short
+
+CheckForInxi
+Try Shell "/tmp/inxi -p" To sPartitions
+
+If Not sPartitions Then
+  LabelSwapTotal.text = "Swap file details are not available"
+  HBoxMemory4.Height = 21 - siProgressH
+  SeparatorSwapFree.Background = iColourFree
+  SeparatorSwapUsed.Background = iColourFree
+  Return
+Endif
+
+sSplit = Split(sPartitions, "\n")
+
+For Each sTemp In sSplit
+  If InStr(sTemp, "swap") Then sSwap = sTemp
+Next
+
+sSwap = psClean(sSwap)
+sSwap = psRemoveDoubleSpaces(sSwap)
+
+siSize = InStr(sSwap, "size") 
+siUsed = InStr(sSwap, "used") 
+siDev = InStr(sSwap, "dev/")
+siPercent = InStr(sSwap, "%")
+siFree1 = InStr(sSwap, "(") + 1
+siFree2 = InStr(sSwap, "%")
+
+sSize = Trim(Mid(sSwap, siSize + 5, siUsed - (siSize + 5)))
+sUsed = Trim(Mid(sSwap, siUsed + 5, siPercent - (siUsed + 4)))
+sUsed = Replace(sUsed, "(", "")
+sDev = Trim(Mid(sSwap, siDev + 4))
+sFree = Trim(Mid(sSwap, siFree1, siFree2 - siFree1))
+siCount = Val(sFree)
+
+sDev = psASCIIClean(sDev)
+sSize = psASCIIClean(sSize)
+
+LabelSwapTotal.Font.Bold = True
+LabelSwapTotal.text = "Total swap file " & "(" & sDev & ") " & sSize
+LabelSwapUsed.text = " " & sUsed & " " & " used" 
+LabelSwapFree.text = sSize & " " & Str(100 - siCount) & "% free "
+
+siHBoxLen = PanelRH.Width
+HBoxMemory4.Height = 21 - siProgressH
+
+If siCount = 0 Then
+  SeparatorSwapUsed.Visible = False
+Else
+  SeparatorSwapUsed.Visible = True
+  SeparatorSwapUsed.Width = siCount
+Endif
+
+SeparatorSwapUsed.Background = iColourUsed
+SeparatorSwapFree.Background = iColourFree
+
+LabelSwapFree.text = sSize & " " & Str(100 - siCount) & "% free "
+  
+End
+
+Public Sub CheckForInxi()
+
+If Not Exist("/tmp/inxi") Then
+  Copy "inxi" To "/tmp/inxi"
+  Chmod "/tmp/inxi" To "rwx"
+Endif
+  
+End
+
+Public Sub psGridView()
+Dim sLabel As String[] = ["Disk", "Size", "Used", "Avail", "Used %"]
+Dim siCount1, siCount2 As Short
+
+With GridViewDrives
+  .Columns.count = 5
+  .Rows.count = siDriveCount + 1
+  .Columns.Width = 75
+  .Rows.Height = 21
+End With
+
+For siCount1 = 0 To siDriveCount
+  For siCount2 = 0 To 4
+    GridViewDrives[siCount1, siCount2].Alignment = Align.Center
+    If siCount1 = 0 Then GridViewDrives[siCount1, siCount2].Font.Bold = True
+  Next  
+Next
+
+For siCount1 = 0 To 4
+  GridViewDrives[0, siCount1].Text = sLabel[siCount1]
+Next
+
+For siCount1 = 1 To siDriveCount
+   If Len(sDriveString[siCount1 - 1, 0]) > 4 Then sDriveString[siCount1 - 1, 0] = ".." & Right(sDriveString[siCount1 - 1, 0], 4)
+  GridViewDrives[siCount1, 0].text = sDriveString[siCount1 - 1, 0]
+Next
+
+For siCount1 = 1 To siDriveCount
+  For siCount2 = 1 To 4
+    GridViewDrives[siCount1, siCount2].text = sDriveString[siCount1 - 1, siCount2]
+  Next
+Next
+
+End
+
+Public Sub psDisplayProgressBars() 'To display the correct amount of Progress bars and their values
+Dim hProgress As Separator[] = [SeparatorD1, SeparatorD2, SeparatorD3, SeparatorD4, SeparatorD5, SeparatorD6, SeparatorD7, SeparatorD8, SeparatorD9, SeparatorD10]
+Dim hProgressFree As Separator[] = [SeparatorE1, SeparatorE2, SeparatorE3, SeparatorE4, SeparatorE5, SeparatorE6, SeparatorE7, SeparatorE8, SeparatorE9, SeparatorE10]
+Dim hHBox As HBox[] = [HBoxD1, HBoxD2, HBoxD3, HBoxD4, HBoxD5, HBoxD6, HBoxD7, HBoxD8, HBoxD9, HBoxD10]
+Dim hPanel As Panel[] = [PanelE3, PanelE4, PanelE5, PanelE6, PanelE7, PanelE8, PanelE9, PanelE10, PanelE11, PanelE12]
+Dim siCount1 As Short
+
+For siCount1 = 0 To 9
+  HBox(hHBox[siCount1]).visible = False
+  hPanel[siCount1].Height = siProgressH
+  hHBox[siCount1].Height = 21 - siProgressH
+Next
+
+For siCount1 = 1 To siDriveCount
+  HBox(hHBox[siCount1 - 1]).visible = True
+  hProgress[siCount1 - 1].Background = iColourUsed
+  hProgressFree[siCount1 - 1].Background = iColourFree
+  hProgress[siCount1 - 1].Width = psPercentage(Val(Left(sDriveString[siCount1 - 1, 4], -1)), VBoxDrive.Width)
+Next
+
+End
+
+Public Sub psPercentage(siPercent As Short, siWidth As Short) As Short
+
+Return (siPercent / 100) * siWidth
+
+End
+
+Public Sub psMemory()                         'To get and display memory details
+Dim sMemory As String
+Dim siCount1, siTotalMemory, siUsedMemory, siFreeMemory, siHBoxLen, siBoxPercentage, siBoxLen As Short
+
+Shell "free -m" To sMemory
+sMemory = Trim(sMemory)
+
+sMemory = psRemoveDoubleSpaces(sMemory)
+
+For siCount1 = 1 To Len(sMemory)
+  If Asc(Mid(sMemory, siCount1, 1)) > 47 And Asc(Mid(sMemory, siCount1, 1)) < 58 Then
+    sMemory = Mid(sMemory, siCount1)
+    Break
+  Endif
+Next
+
+siTotalMemory = Val(Mid(sMemory, 1, InStr(sMemory, " ")))
+siCount1 = InStr(sMemory, "-/+ buffers/cache:") + 19
+Try siUsedMemory = Val(Trim(Mid(sMemory, siCount1, InStr(sMemory, " ", siCount1) - sicount1)))
+siFreeMemory = siTotalMemory - siUsedMemory
+
+LabelMemoryTotal.text = "Total Memory " & Str(siTotalMemory) & " MB"
+LabelMemoryTotal.Font.bold = True
+
+siHBoxLen = PanelLH.W
+siBoxPercentage = (siUsedMemory / siTotalMemory) * 100
+siBoxLen = (siBoxPercentage / 100) * siHBoxLen
+
+SeparatorMemoryUsed.Width = siBoxLen
+SeparatorMemoryUsed.Background = iColourUsed
+SeparatorMemoryFree.Background = iColourFree
+HBoxMemory.Height = 21 - siProgressH
+LabelUsed.text = " " & Str(siUsedMemory) & " MB " & Str(siBoxPercentage) & "% Used "
+LabelMemoryFree.text = Str(siFreeMemory) & " MB " & Str(100 - siBoxPercentage) & "%Free " 
+
+End
+
+Public Sub psDriveDetails()                   'To get the details of the drive(s) 
+Dim sDriveDetailsString, sTemp As String
+Dim siPos1, siPos2, siCount1, siCount2, siCount3 As Short
+Dim sSplit As String[]
+Dim sDriveSplit As String
+Dim sCountDrives As New String[100]
+
+siDriveCount = 0
+LabelDrives.Font.Bold = True
+
+Shell "df -hl" To sDriveDetailsString
+
+sDriveSplit = psRemoveDoubleSpaces(sDriveDetailsString)
+sDriveDetailsString = ""
+
+sSplit = Split(sDriveSplit, "\n")
+
+For Each sTemp In sSplit
+  If InStr(sTemp, "/dev/") Then
+    sCountDrives[siCount1] = sTemp
+    Inc siCount1
+  Endif
+Next
+
+For siCount2 = 0 To siCount1 - 1
+  For siCount3 = 0 To siCount1 - 1
+    If siCount3 = siCount2 Then Continue
+    If InStr(Mid(sCountDrives[siCount3], 1, InStr(sCountDrives[siCount3], " ") - 1), "/dev/") = 0 Then
+      sCountDrives[siCount3] = ""
+      Continue
+    End If
+    If Mid(sCountDrives[siCount3], 1, InStr(sCountDrives[siCount3], " ") - 1) = Mid(sCountDrives[siCount2], 1, InStr(sCountDrives[siCount2], " ") - 1) Then sCountDrives[siCount3] = ""
+  Next
+Next
+
+For siCount1 = 0 To 99
+  If sCountDrives[siCount1] Then sDriveDetailsString &= sCountDrives[siCount1] & "\n"
+Next
+
+Repeat  
+  siPos1 = InStr(sDriveDetailsString, "/dev/")
+  siPos2 = InStr(sDriveDetailsString, "%", siPos1) + 1
+  sTemp = Mid(sDriveDetailsString, siPos1 + 5, (siPos2 - siPos1) - 5)
+    
+  For siCount1 = 0 To 4
+    If siCount1 = 4 Then stemp &= " "
+    sDriveString[siDriveCount, siCount1] = Trim(Mid(sTemp, 1, InStr(sTemp, " ", 1))) '0 = Drive name e.g. sdb1, 1 = Size e.g 24G, 2 = Used e.g. 9.5G, 3 = Avail e.g. 13G, 4 = % e.g. 43% 
+    If siCount1 <> 4 Then
+      sTemp = Trim(Right(sTemp, - Len(sDriveString[siDriveCount, siCount1])))
+    Endif
+  Next
+  
+  sDriveDetailsString = Mid(sDriveDetailsString, InStr(sDriveDetailsString, sDriveString[siDriveCount, 0]))
+  Inc siDriveCount
+  
+Until Not InStr(sDriveDetailsString, "/dev/") 
+
+psExpandSizeDetails
+
+If siDriveCount > 10 Then siDriveCount = 10
+If siDriveCount = 1 Then 
+  LabelDrives.text = Str(siDriveCount) & " main partition found"
+Else
+  LabelDrives.text = Str(siDriveCount) & " main partitions found"
+Endif
+
+End
+
+Public Sub psUptime()
+Dim sUptime As String
+
+Shell "uptime" To sUptime
+sUptime = Mid(sUptime, 1, InStr(sUptime, ",") - 1)
+sUptime = psRemoveDoubleSpaces(sUptime)
+sUptime = Replace(sUptime, "up", " - Computer uptime") 
+LabelUptime.Font.bold = True
+If InStr(sUptime, "min") Or InStr(sUptime, "day") Then
+  LabelUptime.text = "Time: " & sUptime  
+Else
+  LabelUptime.text = "Time: " & sUptime & " hr" 
+End If
+
+End
+
+Public Sub psExpandSizeDetails()
+Dim siCount1, siCount2 As Short
+
+For siCount1 = 0 To 9
+  For siCount2 = 1 To 3
+    sDriveString[siCount1, siCount2] = Replace(sDriveString[siCount1, siCount2], "K", "KB")
+    sDriveString[siCount1, siCount2] = Replace(sDriveString[siCount1, siCount2], "M", "MB")
+    sDriveString[siCount1, siCount2] = Replace(sDriveString[siCount1, siCount2], "G", "GB")
+    sDriveString[siCount1, siCount2] = Replace(sDriveString[siCount1, siCount2], "T", "TB")
+    sDriveString[siCount1, siCount2] = Replace(sDriveString[siCount1, siCount2], "P", "PB")
+  Next
+Next
+ 
+End
+
+Public Sub psGetSystemDetails1()
+Dim sSystem, sHost, sKernel, sDesktop, sDistro As String
+Dim iPoint1, iPoint2, iPoint3 As Integer
+
+LabelSystem.Text = "System details"
+LabelSystem.Font.bold = True
+
+CheckForInxi
+Shell "/tmp/inxi -S" To sSystem
+
+sSystem = psClean(sSystem)
+sSystem = psRemoveDoubleSpaces(sSystem)
+
+iPoint1 = InStr(sSystem, "Host")
+iPoint2 = InStr(sSystem, "Kernel") 
+iPoint3 = iPoint2 - iPoint1
+
+sHost = Mid(sSystem, iPoint1, iPoint3)
+sHost = Trim(sHost)
+
+sHost = Replace(sHost, "Host", "")
+sHost = Trim(Mid(sHost, 2))
+sKernel = Trim(Mid(sSystem, InStr(sSystem, "Kernel"), InStr(sSystem, "Desktop") - InStr(sSystem, "Kernel")))
+sKernel = Replace(sKernel, "Kernel", "")
+sKernel = Trim(Mid(sKernel, 2))
+sDesktop = Trim(Mid(sSystem, InStr(sSystem, "Desktop"), InStr(sSystem, "Distro") - InStr(sSystem, "Desktop")))
+sDesktop = Replace(sDesktop, "Desktop", "")
+sDesktop = Trim(Mid(sDesktop, 2))
+sDistro = Trim(Mid(sSystem, InStr(sSystem, "Distro")))
+sDistro = Replace(sDistro, "Distro", "")
+sDistro = Trim(Mid(sDistro, 2))
+
+LabelHostL.Font.Bold = True
+LabelHostL.text = "Host:  "
+LabelHost.text = psASCIIClean(sHost)
+LabelKernelL.Text = "Kernel:  "
+LabelKernelL.Font.bold = True
+LabelKernel.Text = psASCIIClean(sKernel)
+LabelDesktopL.text = "Desktop:  "
+LabelDesktopL.Font.bold = True
+LabelDesktop.text = psASCIIClean(sDesktop)
+LabelDistroL.text = "Distro:  "
+LabelDistroL.Font.bold = True
+LabelDistro.text = psASCIIClean(sDistro)
+
+ButtonMoreDetails.Visible = True
+
+End
+
+Public Sub Form_Resize()
+
+Try pProcess.Kill
+Timer1.Delay = siPoll * 5
+
+End
+
+Public Sub psGetSettings()
+Dim siX, siY As Short
+
+Me.H = Settings["H", 705]
+Me.W = Settings["W", 865]
+siX = Settings["X", -1]
+siY = Settings["Y", -1]
+siProgressH = Settings["siProgressH", 5]
+iColourUsed = Settings["iColourUsed", &HFF0000&]
+iColourFree = Settings["iColourFree", &HFFFF00&]
+bDontShowDependencies = Settings["bDontShowDependencies", False]
+siPoll = Settings["siPoll", 1000]
+
+If siY = -1 Or siX = -1 Then
+  Me.Center
+Else
+  Me.X = siX
+  Me.y = siY
+Endif
+
+End
+
+Public Sub psASCIIClean(sString As String) As String 'Required as extra characters are added to the string when compiled
+Dim siCount As Short
+
+siCount = InStr(sString, Chr(03))
+If siCount Then sString = Mid(sString, 1, siCount - 1)
+sString = Replace(sString, "\n", "")
+
+Return sString
+
+End
+
+Public Sub psClean(sInput As String) As String
+Dim siCount1, siCount2 As Short
+Dim sTemp As String
+
+sInput = " " & sInput
+
+Repeat
+  sTemp = sInput
+  siCount1 = InStr(sInput, Chr(27))
+  If siCount1 Then 
+    siCount2 = InStr(sInput, "m", siCount1)
+    sInput = Mid(sInput, 1, siCount1 - 1) & Mid(sInput, siCount2 + 1)
+  End If
+Until sTemp = sInput
+
+Return Trim(sInput)
+
+End
+
+Public Sub psRemoveDoubleSpaces(sString As String) As String
+
+Dim sTemp As String
+
+Repeat
+  sTemp = sString
+  sString = Replace(sString, "  ", " ")
+Until sTemp = sString
+
+Return sString
+
+End
+
+Public Sub mnuSettings_Click()
+
+Timer1.delay = siPoll * 2
+SettingsForm.Show
+
+End
+
+Public Sub ToolButtonSettings_Click()
+
+mnuSettings_Click
+
+End
+
+Public Sub mnuAbout_Click()
+
+Timer1.enabled = False
+About.Showmodal
+Timer1.Enabled = True
+
+End
+
+Public Sub ToolButtonAbout_Click()
+
+mnuAbout_Click
+
+End
+
+Public Sub mnuQuit_Click()
+
+EndOfProg
+
+End
+
+Public Sub ToolButtonQuit_Click()
+
+mnuQuit_Click  
+
+End
+
+Public Sub EndOfProg()
+
+pProcess.Kill
+Timer1.Enabled = False
+Wait 0.5
+
+Settings["H"] = Me.H
+Settings["W"] = Me.W
+Settings["X"] = Me.X
+Settings["Y"] = Me.Y
+Settings.Write(Me)
+Settings["siProgressH"] = siProgressH
+Settings["iColourUsed"] = iColourUsed
+Settings["iColourFree"] = iColourFree
+Settings["bDontShowDependencies"] = bDontShowDependencies
+Settings["siPoll"] = siPoll
+Settings.Save
+
+Me.Close
+bCloseControl = True
+Form_Close
+
+End
+
+Public Sub Form_Close()
+
+If Not bCloseControl Then EndOfProg
+
+End
+
+Public Sub Form_MouseDown()
+
+Form_Resize
+
+End
+
+Public Sub ButtonMoreDetails_Click()
+
+Timer1.Enabled = False
+ButtonMoreDetails.text = "Please wait.."
+Wait 0.25
+MoreDetails.Showmodal
+ButtonMoreDetails.text = "&More stats"
+Timer1.Enabled = True
+
+End
+
+

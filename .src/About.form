@@ -1,0 +1,30 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,90,65)
+  Text = ("PCStats About")
+  Icon = Picture["pcstats.png"]
+  Arrangement = Arrange.Vertical
+  Padding = 5
+  { TextAreaAbout TextArea
+    MoveScaled(4,2,59,53)
+    Expand = True
+    Text = ("This program PCStats has been written in Gambas3 by Charlie Ogier 2015(C)\n\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the license, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS for a PARTICULAR PURPOSE.See the GNU General Public License for more details.\\n\\nA Copy of the GNU General Public License is available from the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110 - 1301 USA. \n\nI am happy to credit the author of the icon but I an unable to locate his/her name. The icon came from https://www.iconfinder.com/icons/61654/chart_pie_statistics_icon#size=128.\n\nThanks to the guys at the gambas.guru and nabbler web sites for their help and expertise.\n\n\"Please report bugs or any comments to bugs@cogier.com\"\n\ninxi is included with this program which is released under the GNU GPL v3 licence, credits below: - \n\ninxi is is a fork of locsmif's largely unmaintained yet very clever, infobash script.Original infobash author and copyright holder: Copyright (C) 2005-2007  Michiel de Boer a.k.a. locsmif inxi version: Copyright (C) 2008-15 Scott Rogers & Harald Hope \nFurther fixes (listed as known): Horst Tritremmel <hjt at sidux.com>\nSteven Barrett (aka: damentz) - usb audio patch; swap percent used patch.  Jarett.Stevens - dmidecode -M patch for older systems with no /sys and a special thanks to the nice people at irc.oftc.net channels #linux-smokers-club and #smxi, who  all really have to be considered to be co-developers because of their non-stop enthusiasm and willingness to provide real time testing and debugging of inxi development.\n\nWithout a wide range of diverse Linux kernel based Free Desktop systems to test on, we could never have gotten inxi to be as reliable and solid as it's turning out to be and of course, big thanks locsmif, who figured out a lot of the core methods, logic, and tricks used in inxi.\n\n\n\n")
+    ReadOnly = True
+    Wrap = True
+  }
+  { HBox1 HBox
+    MoveScaled(2,56,58,4)
+    { LabelVersion Label
+      MoveScaled(1,1,20,2)
+    }
+    { Panel1 Panel
+      MoveScaled(24,1,14,3)
+      Expand = True
+    }
+    { ButtonDone Button
+      MoveScaled(40,0,12,4)
+      Text = Shortcut(("Done"), "D")
+    }
+  }
+}

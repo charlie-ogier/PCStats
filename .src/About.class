@@ -1,0 +1,14 @@
+' Gambas class file
+
+Public Sub Form_Open()
+
+LabelVersion.text = FMain.sVersion
+TextAreaAbout.Pos = 0
+
+End
+
+Public Sub ButtonDone_Click()
+
+Me.Close
+
+End

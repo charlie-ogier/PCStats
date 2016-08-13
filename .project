@@ -1,0 +1,22 @@
+# Gambas Project File 3.0
+# Compiled with Gambas 3.8.4
+Title=PCStats
+Startup=FMain
+Icon=pcstats.png
+Version=0.3.1
+Component=gb.image
+Component=gb.qt4
+Component=gb.form
+Component=gb.dbus
+Component=gb.settings
+Description="To display various computer statistics, many  graphically,  including:-\nMain partitions and usage\nProcessor usage (up to 8)\nMemory usage, Host computer name\nLinux Distibution, Desktop\nKernel, Uptime\nAdditional details of CPU, GPU, Audio, Network etc."
+Authors="Charlie Ogier with help from the contributors of Gambas.guru and Nabbler forums"
+TabSize=2
+Translate=1
+Language=en_US
+CreateShortcut=1
+Vendor=cogier
+Packager=1
+Tags=HardwareSettings,Network
+GambasVersion=3.8
+CreateMenu=1

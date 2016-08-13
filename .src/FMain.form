@@ -1,0 +1,983 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,87,118)
+  Icon = Picture["pcstats.png"]
+  Arrangement = Arrange.Vertical
+  Padding = 5
+  { mnuMenu Menu
+    Text = Shortcut(("Menu"), "M")
+    Shortcut = "Ctrl+Shift+M"
+    { mnuSettings Menu
+      Text = Shortcut(("Settings"), "S")
+      Shortcut = "Ctrl+Shift+S"
+    }
+    { mnuAbout Menu
+      Text = Shortcut(("About"), "A")
+      Shortcut = "Ctrl+Shift+A"
+    }
+    { mnuQuit Menu
+      Text = Shortcut(("Quit"), "Q")
+      Shortcut = "Alt+F4"
+    }
+  }
+  { HBox1 HBox
+    MoveScaled(4,0,55,4)
+    Padding = 2
+    { ToolButtonSettings ToolButton
+      MoveScaled(2,0,4,4)
+      ToolTip = ("Settings Ctrl+Shift+S")
+      Picture = Picture["icon:/32/exec"]
+    }
+    { ToolButtonAbout ToolButton
+      MoveScaled(9,1,4,4)
+      ToolTip = ("About Ctrl+Shift+A")
+      Picture = Picture["icon:/32/question"]
+    }
+    { Panel24 Panel
+      MoveScaled(16,1,6,1)
+    }
+    { ToolButtonQuit ToolButton
+      MoveScaled(23,1,4,4)
+      ToolTip = ("Quit Alt+F4")
+      Picture = Picture["icon:/32/quit"]
+    }
+    { LabelUptime Label
+      MoveScaled(39,1,11,2)
+      Expand = True
+      Alignment = Align.Right
+    }
+  }
+  { Separator14 Separator
+    MoveScaled(0,4.1429,84,0)
+    Background = Color.Black
+  }
+  { HBoxTop HBox
+    MoveScaled(1,4.7143,85,47)
+    Expand = True
+    { Separator11 Separator
+      MoveScaled(1,0,0,42.8571)
+      Background = Color.Black
+    }
+    { Panel17 VBox
+      MoveScaled(3,1,38,45)
+      Expand = True
+      { Panel16 HBox
+        MoveScaled(2,2,33,3)
+        { LabelDrives Label
+          MoveScaled(0,0,20,3)
+          Expand = True
+          Alignment = Align.Center
+        }
+      }
+      { GridViewDrives GridView
+        MoveScaled(0,7,37,30)
+        Expand = True
+        Border = False
+        ScrollBar = Scroll.None
+      }
+    }
+    { Separator2 Separator
+      MoveScaled(43,0,0,42.8571)
+      Background = Color.Black
+    }
+    { VBoxDrive VBox
+      MoveScaled(48,1,29,54)
+      Expand = True
+      { Panel15 HBox
+        MoveScaled(0,2,26,3)
+        Padding = 2
+        { Label4 Label
+          MoveScaled(2,0,3,3)
+          Font = Font["Sans Serif"]
+          Text = ("0")
+        }
+        { Panel20 Panel
+          MoveScaled(7,0,1,3)
+          Expand = True
+        }
+        { Label6 Label
+          MoveScaled(11.5714,0,3,3)
+          Font = Font["Sans Serif"]
+          Text = ("50")
+          Alignment = Align.Center
+        }
+        { Panel21 Panel
+          MoveScaled(15,1,1,3)
+          Expand = True
+        }
+        { Label5 Label
+          MoveScaled(21,0,3,3)
+          Font = Font["Sans Serif"]
+          Text = ("100")
+          Alignment = Align.Right
+        }
+      }
+      { Panel1 HBox
+        MoveScaled(0,6,26,2.7143)
+        Padding = 2
+        { Separator25 Separator
+          MoveScaled(1,0,0.2857,4)
+          Background = Color.Black
+        }
+        { Panel14 Panel
+          MoveScaled(5,0,1,3)
+          Expand = True
+        }
+        { Separator22 Separator
+          MoveScaled(6,0,0,4)
+          Background = Color.Black
+        }
+        { Panel13 Panel
+          MoveScaled(6,0,1,3)
+          Expand = True
+        }
+        { Separator21 Separator
+          MoveScaled(7,0,0,4)
+          Background = Color.Black
+        }
+        { Panel12 Panel
+          MoveScaled(7,0,1,3)
+          Expand = True
+        }
+        { Separator20 Separator
+          MoveScaled(8,0,0,4)
+          Background = Color.Black
+        }
+        { Panel11 Panel
+          MoveScaled(8,0,1,3)
+          Expand = True
+        }
+        { Separator19 Separator
+          MoveScaled(9,0,0,4)
+          Background = Color.Black
+        }
+        { Panel5 Panel
+          MoveScaled(9,0,1,3)
+          Expand = True
+        }
+        { Separator23 Separator
+          MoveScaled(12,1,0.2857,4)
+          Background = Color.Black
+        }
+        { Panel10 Panel
+          MoveScaled(16,0,1,3)
+          Expand = True
+        }
+        { Separator18 Separator
+          MoveScaled(17,0,0,4)
+          Background = Color.Black
+        }
+        { Panel9 Panel
+          MoveScaled(17,0,1,3)
+          Expand = True
+        }
+        { Separator17 Separator
+          MoveScaled(18,0,0,4)
+          Background = Color.Black
+        }
+        { Panel8 Panel
+          MoveScaled(18,0,1,3)
+          Expand = True
+        }
+        { Separator16 Separator
+          MoveScaled(19,0,0,4)
+          Background = Color.Black
+        }
+        { Panel7 Panel
+          MoveScaled(19,0,1,3)
+          Expand = True
+        }
+        { Separator15 Separator
+          MoveScaled(20,0,0,4)
+          Background = Color.Black
+        }
+        { Panel6 Panel
+          MoveScaled(20,0,1,3)
+          Expand = True
+        }
+        { Separator24 Separator
+          MoveScaled(25,0,0.2857,4)
+          Background = Color.Black
+        }
+      }
+      { PanelE3 Panel
+        MoveScaled(0,9.2857,28.5714,0.2857)
+      }
+      { HBoxD1 HBox
+        MoveScaled(0,10,26,3)
+        { Panel31 Panel
+          MoveScaled(0,0,0.2857,2)
+        }
+        { Separator38 Separator
+          MoveScaled(1.5714,0,0,4)
+          Background = Color.Black
+        }
+        { SeparatorD1 Separator
+          MoveScaled(6,0,6,2)
+          Background = Color.White
+        }
+        { SeparatorE1 Separator
+          MoveScaled(14,1,6,1)
+          Background = Color.White
+          Expand = True
+        }
+        { Panel54 Panel
+          MoveScaled(22,0,0.2857,2)
+        }
+      }
+      { PanelE4 Panel
+        MoveScaled(0,13.2857,28.5714,0.2857)
+      }
+      { HBoxD2 HBox
+        MoveScaled(0,14,26,3)
+        { Panel32 Panel
+          MoveScaled(0,0,0.2857,2)
+        }
+        { Separator40 Separator
+          MoveScaled(1.5714,0,0,4)
+          Background = Color.Black
+        }
+        { SeparatorD2 Separator
+          MoveScaled(4,1,6,2)
+          Background = Color.White
+        }
+        { SeparatorE2 Separator
+          MoveScaled(14,1,6,1)
+          Background = Color.White
+          Expand = True
+        }
+        { Panel53 Panel
+          MoveScaled(23,0,0.2857,2)
+        }
+      }
+      { PanelE5 Panel
+        MoveScaled(0,17.4286,28.5714,0.2857)
+      }
+      { HBoxD3 HBox
+        MoveScaled(0,18,26,3)
+        { Panel34 Panel
+          MoveScaled(0,0,0.2857,2)
+        }
+        { Separator41 Separator
+          MoveScaled(1.5714,0,0,4)
+          Background = Color.Black
+        }
+        { SeparatorD3 Separator
+          MoveScaled(4,1,6,2)
+          Background = Color.White
+        }
+        { SeparatorE3 Separator
+          MoveScaled(14,1,6,1)
+          Background = Color.White
+          Expand = True
+        }
+        { Panel55 Panel
+          MoveScaled(22,0,0.2857,2)
+        }
+      }
+      { PanelE6 Panel
+        MoveScaled(0,21.4286,28.5714,0.2857)
+      }
+      { HBoxD4 HBox
+        MoveScaled(0,22,26,3)
+        { Panel35 Panel
+          MoveScaled(0,0,0.2857,2)
+        }
+        { Separator42 Separator
+          MoveScaled(1.5714,0,0,4)
+          Background = Color.Black
+        }
+        { SeparatorD4 Separator
+          MoveScaled(3,0,6,2)
+          Background = Color.White
+        }
+        { SeparatorE4 Separator
+          MoveScaled(14,1,6,1)
+          Background = Color.White
+          Expand = True
+        }
+        { Panel56 Panel
+          MoveScaled(21,0,0.2857,2)
+        }
+      }
+      { PanelE7 Panel
+        MoveScaled(0,25.2857,28.5714,0.2857)
+      }
+      { HBoxD5 HBox
+        MoveScaled(0,26,26,3)
+        { Panel37 Panel
+          MoveScaled(0,0,0.2857,2)
+        }
+        { Separator43 Separator
+          MoveScaled(1.5714,0,0,4)
+          Background = Color.Black
+        }
+        { SeparatorD5 Separator
+          MoveScaled(3,1,6,2)
+          Background = Color.White
+        }
+        { SeparatorE5 Separator
+          MoveScaled(14,1,6,1)
+          Background = Color.White
+          Expand = True
+        }
+        { Panel57 Panel
+          MoveScaled(22,0,0.2857,2)
+        }
+      }
+      { PanelE8 Panel
+        MoveScaled(0,29.2857,28.5714,0.2857)
+      }
+      { HBoxD6 HBox
+        MoveScaled(0,30,26,3)
+        { Panel38 Panel
+          MoveScaled(0,0,0.2857,2)
+        }
+        { Separator44 Separator
+          MoveScaled(1.5714,0,0,4)
+          Background = Color.Black
+        }
+        { SeparatorD6 Separator
+          MoveScaled(4,1,6,2)
+          Background = Color.White
+        }
+        { SeparatorE6 Separator
+          MoveScaled(14,1,6,1)
+          Background = Color.White
+          Expand = True
+        }
+        { Panel58 Panel
+          MoveScaled(22,0,0.2857,2)
+        }
+      }
+      { PanelE9 Panel
+        MoveScaled(0,33.2857,28.5714,0.2857)
+      }
+      { HBoxD7 HBox
+        MoveScaled(0,34,26,3)
+        { Panel41 Panel
+          MoveScaled(0,0,0.2857,2)
+        }
+        { Separator45 Separator
+          MoveScaled(1.5714,0,0,4)
+          Background = Color.Black
+        }
+        { SeparatorD7 Separator
+          MoveScaled(3,1,6,2)
+          Background = Color.White
+        }
+        { SeparatorE7 Separator
+          MoveScaled(14,1,6,1)
+          Background = Color.White
+          Expand = True
+        }
+        { Panel59 Panel
+          MoveScaled(22,0,0.2857,2)
+        }
+      }
+      { PanelE10 Panel
+        MoveScaled(0,37.4286,28.5714,0.2857)
+      }
+      { HBoxD8 HBox
+        MoveScaled(0,38,26,3)
+        { Panel42 Panel
+          MoveScaled(0,0,0.2857,2)
+        }
+        { Separator46 Separator
+          MoveScaled(1.5714,0,0,4)
+          Background = Color.Black
+        }
+        { SeparatorD8 Separator
+          MoveScaled(4,1,6,2)
+          Background = Color.White
+        }
+        { SeparatorE8 Separator
+          MoveScaled(14,1,6,1)
+          Background = Color.White
+          Expand = True
+        }
+        { Panel60 Panel
+          MoveScaled(22,0,0.2857,2)
+        }
+      }
+      { PanelE11 Panel
+        MoveScaled(0,41.4286,28.5714,0.2857)
+      }
+      { HBoxD9 HBox
+        MoveScaled(0,42,26,3)
+        { Panel62 Panel
+          MoveScaled(1,0,0.2857,2)
+        }
+        { Separator61 Separator
+          MoveScaled(3,0,0,4)
+          Background = Color.Black
+        }
+        { SeparatorD9 Separator
+          MoveScaled(4,0,6,2)
+          Background = Color.White
+        }
+        { SeparatorE9 Separator
+          MoveScaled(14,1,6,1)
+          Background = Color.White
+          Expand = True
+        }
+        { Panel61 Panel
+          MoveScaled(22,0,0.2857,2)
+        }
+      }
+      { PanelE12 Panel
+        MoveScaled(0,45.2857,28.5714,0.2857)
+      }
+      { HBoxD10 HBox
+        MoveScaled(0,46,26,3)
+        { SeparatorD10 Separator
+          MoveScaled(1,1,6,2)
+          Background = Color.White
+        }
+        { SeparatorE10 Separator
+          MoveScaled(14,1,6,1)
+          Background = Color.White
+          Expand = True
+        }
+      }
+      { PanelE1 Panel
+        MoveScaled(0,50,28.5714,0.2857)
+      }
+    }
+    { Separator10 Separator
+      MoveScaled(82,0,0,42.8571)
+      Background = Color.Black
+    }
+  }
+  { Timer1 #Timer
+    #MoveScaled(19,44)
+  }
+  { Separator1 Separator
+    MoveScaled(1,52,84,0)
+    Background = Color.Black
+  }
+  { Panel2 HBox
+    MoveScaled(1,53,85,61)
+    Expand = True
+    { HBox20 HBox
+      MoveScaled(0.4286,0,0,42.8571)
+      { Separator54 Separator
+        MoveScaled(2,1,13,0.2857)
+        Background = Color.Black
+        Expand = True
+      }
+    }
+    { PanelLH VBox
+      MoveScaled(1,2,40,59)
+      Expand = True
+      { HBox9 HBox
+        MoveScaled(2,1,35,3)
+        { LabelMemoryTotal Label
+          MoveScaled(1,0,28.5714,2)
+          Expand = True
+          Alignment = Align.Center
+        }
+      }
+      { HBoxMemory2 HBox
+        MoveScaled(1,4.1429,36,3)
+        { LabelUsed Label
+          MoveScaled(2,0,16,2)
+          Expand = True
+          Alignment = Align.Left
+        }
+        { LabelMemoryFree Label
+          MoveScaled(10,0,23,3)
+          Expand = True
+          Alignment = Align.Right
+        }
+      }
+      { HBox3 HBox
+        MoveScaled(0,7.1429,39.2857,0)
+        { Separator3 Separator
+          MoveScaled(2,1,13,0.2857)
+          Background = Color.Black
+          Expand = True
+        }
+      }
+      { HBoxMemory HBox
+        MoveScaled(1.8571,8,36,3)
+        { Separator6 Separator
+          MoveScaled(0,0,0,4)
+          Background = Color.Black
+        }
+        { Panel3 Panel
+          MoveScaled(0.4286,0,0.2857,2)
+        }
+        { Separator7 Separator
+          MoveScaled(2,0,0,4)
+          Background = Color.Black
+        }
+        { SeparatorMemoryUsed Separator
+          MoveScaled(3,0,8,2)
+          Background = Color.White
+        }
+        { SeparatorMemoryFree Separator
+          MoveScaled(13,0,6,2)
+          Background = Color.White
+          Expand = True
+        }
+        { Separator8 Separator
+          MoveScaled(24,0,0,4)
+          Background = Color.Black
+        }
+        { Panel19 Panel
+          MoveScaled(26,1,0.2857,2)
+        }
+        { Separator5 Separator
+          MoveScaled(29,1,0,4)
+          Background = Color.Black
+        }
+      }
+      { HBox4 HBox
+        MoveScaled(1,12,39.2857,0)
+        { Separator4 Separator
+          MoveScaled(2,1,13,0.7143)
+          Background = Color.Black
+          Expand = True
+        }
+      }
+      { Panel4 Panel
+        MoveScaled(2,13,37,1)
+      }
+      { HBox2 HBox
+        MoveScaled(0,15,39.2857,0)
+        { Separator12 Separator
+          MoveScaled(2,1,13,0.2857)
+          Background = Color.Black
+          Expand = True
+        }
+      }
+      { Panel30 VBox
+        MoveScaled(4,16,36,42)
+        Expand = True
+        { HBox13 HBox
+          MoveScaled(1,0,35,4)
+          { LabelProcessor Label
+            MoveScaled(4,0,28.5714,2)
+            Expand = True
+            Alignment = Align.Center
+          }
+        }
+        { HBox21 HBox
+          MoveScaled(0,4.1429,39.2857,0)
+          { Separator13 Separator
+            MoveScaled(2,1,13,0.2857)
+            Background = Color.Black
+            Expand = True
+          }
+        }
+        { HBox11 HBox
+          MoveScaled(0,5,36,4)
+          { LabelProcessorUsed Label
+            MoveScaled(0,0,26,2)
+            Expand = True
+            Alignment = Align.Center
+          }
+        }
+        { HBox14 HBox
+          MoveScaled(0,11,35,3)
+          { LabelCPUAvearge Label
+            MoveScaled(1,0,18,3)
+            Expand = True
+          }
+        }
+        { HBox22 HBox
+          MoveScaled(0,15,39,0)
+          { Separator37 Separator
+            MoveScaled(2,1,13,0.2857)
+            Background = Color.Black
+            Expand = True
+          }
+        }
+        { HBoxD11 HBox
+          MoveScaled(0,16,37,3)
+          { Separator27 Separator
+            MoveScaled(0,0,0,4)
+            Background = Color.Black
+          }
+          { Panel22 Panel
+            MoveScaled(1,0,0.2857,2)
+          }
+          { Separator28 Separator
+            MoveScaled(3,0,0,4)
+            Background = Color.Black
+          }
+          { SeparatorCPUUsed Separator
+            MoveScaled(5,0,8,2)
+            Background = Color.White
+          }
+          { SeparatorCPUFree Separator
+            MoveScaled(14,0,6,2)
+            Background = Color.White
+            Expand = True
+          }
+          { Separator29 Separator
+            MoveScaled(29,0,0,4)
+            Background = Color.Black
+          }
+          { Panel43 Panel
+            MoveScaled(31,1,0.2857,2)
+          }
+          { Separator30 Separator
+            MoveScaled(34,0,0,4)
+            Background = Color.Black
+          }
+        }
+        { HBox15 HBox
+          MoveScaled(0,20,39,0)
+          { Separator31 Separator
+            MoveScaled(2,1,13,0.2857)
+            Background = Color.Black
+            Expand = True
+          }
+        }
+        { LabelNoMpstat Label
+          MoveScaled(2,20,30,2.8571)
+          Visible = False
+          Alignment = Align.Center
+        }
+        { HBox26 HBox
+          MoveScaled(0,26,9,1)
+          Expand = True
+        }
+        { HBoxCPU0 HBox
+          MoveScaled(0,27,36,3)
+          { LabelCPUTitle0 Label
+            MoveScaled(1,0,6,3)
+            Alignment = Align.Right
+          }
+          { LabelCPU0 Label
+            MoveScaled(11,0,6,3)
+            Alignment = Align.Right
+          }
+          { Panel40 Panel
+            MoveScaled(18,0,2,3)
+            Expand = True
+          }
+          { LabelCPUTitle1 Label
+            MoveScaled(20,0,6,3)
+            Alignment = Align.Right
+          }
+          { LabelCPU1 Label
+            MoveScaled(29,0,5,3)
+            Alignment = Align.Right
+          }
+          { Panel44 Panel
+            MoveScaled(34,0,2,3)
+          }
+        }
+        { HBox25 HBox
+          MoveScaled(0,30,9,1)
+          Expand = True
+        }
+        { HBoxCPU1 HBox
+          MoveScaled(0,31,36,3)
+          { LabelCPUTitle2 Label
+            MoveScaled(1,0,6,3)
+            Alignment = Align.Right
+          }
+          { LabelCPU2 Label
+            MoveScaled(11,0,6,3)
+            Alignment = Align.Right
+          }
+          { Panel33 Panel
+            MoveScaled(18,0,2,3)
+            Expand = True
+          }
+          { LabelCPUTitle3 Label
+            MoveScaled(20,0,6,3)
+            Alignment = Align.Right
+          }
+          { LabelCPU3 Label
+            MoveScaled(28,0,5,3)
+            Alignment = Align.Right
+          }
+          { Panel45 Panel
+            MoveScaled(34,0,2,3)
+          }
+        }
+        { HBox24 HBox
+          MoveScaled(1,34,9,1)
+          Expand = True
+        }
+        { HBoxCPU2 HBox
+          MoveScaled(0,35,36,3)
+          { LabelCPUTitle4 Label
+            MoveScaled(1,0,6,3)
+            Alignment = Align.Right
+          }
+          { LabelCPU4 Label
+            MoveScaled(11,0,6,3)
+            Alignment = Align.Right
+          }
+          { Panel36 Panel
+            MoveScaled(18,0,2,3)
+            Expand = True
+          }
+          { LabelCPUTitle5 Label
+            MoveScaled(20,0,6,3)
+            Alignment = Align.Right
+          }
+          { LabelCPU5 Label
+            MoveScaled(28,0,5,3)
+            Alignment = Align.Right
+          }
+          { Panel46 Panel
+            MoveScaled(34,0,2,3)
+          }
+        }
+        { HBox23 HBox
+          MoveScaled(2,38,9,1)
+          Expand = True
+        }
+        { HBoxCPU3 HBox
+          MoveScaled(0,39,36,3)
+          { LabelCPUTitle6 Label
+            MoveScaled(1,0,6,3)
+            Alignment = Align.Right
+          }
+          { LabelCPU6 Label
+            MoveScaled(11,0,6,3)
+            Alignment = Align.Right
+          }
+          { Panel39 Panel
+            MoveScaled(18,0,2,3)
+            Expand = True
+          }
+          { LabelCPUTitle7 Label
+            MoveScaled(20,0,6,3)
+            Alignment = Align.Right
+          }
+          { LabelCPU7 Label
+            MoveScaled(28,0,5,3)
+            Alignment = Align.Right
+          }
+          { Panel47 Panel
+            MoveScaled(34,0,2,3)
+          }
+        }
+      }
+      { HBox18 HBox
+        MoveScaled(0,58.2857,39,0)
+        { Separator52 Separator
+          MoveScaled(2,1,13,0.2857)
+          Background = Color.Black
+          Expand = True
+        }
+      }
+    }
+    { HBox16 HBox
+      MoveScaled(42.4286,2,0,42.8571)
+      { Separator50 Separator
+        MoveScaled(2,1,13,0.2857)
+        Background = Color.Black
+        Expand = True
+      }
+    }
+    { PanelRH VBox
+      MoveScaled(43,1,40,60)
+      Expand = True
+      { HBox7 HBox
+        MoveScaled(2,2,37,3)
+        { LabelSwapTotal Label
+          MoveScaled(5,0,28.5714,2)
+          Expand = True
+          Alignment = Align.Center
+        }
+      }
+      { HBoxMemory3 HBox
+        MoveScaled(1,6,38,3)
+        { LabelSwapUsed Label
+          MoveScaled(2,0,13,2)
+          Expand = True
+          Alignment = Align.Left
+        }
+        { LabelSwapFree Label
+          MoveScaled(14,0,21,3)
+          Expand = True
+          Alignment = Align.Right
+        }
+      }
+      { HBox6 HBox
+        MoveScaled(0,9.5714,39,0)
+        { Separator26 Separator
+          MoveScaled(2,1,13,0.2857)
+          Background = Color.Black
+          Expand = True
+        }
+      }
+      { HBoxMemory4 HBox
+        MoveScaled(1,10,37,3)
+        { Separator32 Separator
+          MoveScaled(0,0,0,4)
+          Background = Color.Black
+        }
+        { Panel23 Panel
+          MoveScaled(1,0,0.2857,2)
+        }
+        { Separator33 Separator
+          MoveScaled(3,0,0,4)
+          Background = Color.Black
+        }
+        { SeparatorSwapUsed Separator
+          MoveScaled(5,0,8,2)
+          Background = Color.White
+        }
+        { SeparatorSwapFree Separator
+          MoveScaled(14,0,6,2)
+          Background = Color.White
+          Expand = True
+        }
+        { Separator34 Separator
+          MoveScaled(29,0,0,4)
+          Background = Color.Black
+        }
+        { Panel25 Panel
+          MoveScaled(31,1,0.2857,2)
+        }
+        { Separator35 Separator
+          MoveScaled(34,0,0,4)
+          Background = Color.Black
+        }
+      }
+      { HBox10 HBox
+        MoveScaled(1,13,39,0)
+        { Separator36 Separator
+          MoveScaled(2,1,13,0.2857)
+          Background = Color.Black
+          Expand = True
+        }
+      }
+      { Panel18 Panel
+        MoveScaled(0,14,37,1)
+      }
+      { HBox12 HBox
+        MoveScaled(1,16,39,0)
+        { Separator39 Separator
+          MoveScaled(2,1,13,0.2857)
+          Background = Color.Black
+          Expand = True
+        }
+      }
+      { VBoxSystem VBox
+        MoveScaled(1,17,39,41)
+        Expand = True
+        { HBox5 HBox
+          MoveScaled(1,0,36,4)
+          { LabelSystem Label
+            MoveScaled(0,1,37,2)
+            Expand = True
+            Alignment = Align.Center
+          }
+        }
+        { HBox8 HBox
+          MoveScaled(0,4.5714,39,0)
+          { Separator9 Separator
+            MoveScaled(2,1,13,0.2857)
+            Background = Color.Black
+            Expand = True
+          }
+        }
+        { Panel26 HBox
+          MoveScaled(0,9,38,4)
+          { LabelHostL TextLabel
+            MoveScaled(0,0,11,3)
+            Alignment = Align.Right
+          }
+          { Panel48 Panel
+            MoveScaled(12,0,1,3)
+          }
+          { LabelHost Label
+            MoveScaled(13,0,11,3)
+            Expand = True
+          }
+          { ButtonMoreDetails Button
+            MoveScaled(24,0,14,4)
+            Visible = False
+            ToolTip = ("Provides a comprehensive list of \nyour computer's specifications ")
+            Text = Shortcut(("More stats"), "o")
+          }
+        }
+        { Panel27 HBox
+          MoveScaled(1,15,37,4)
+          { LabelDistroL TextLabel
+            MoveScaled(0,0,11,3)
+            Alignment = Align.Right
+          }
+          { Panel49 Panel
+            MoveScaled(14,0,1,3)
+          }
+          { LabelDistro Label
+            MoveScaled(18,0,18,3)
+            Expand = True
+          }
+        }
+        { Panel28 HBox
+          MoveScaled(0,23,38,4)
+          { LabelDesktopL TextLabel
+            MoveScaled(0,0,11,3)
+            Alignment = Align.Right
+          }
+          { Panel50 Panel
+            MoveScaled(15,1,1,3)
+          }
+          { LabelDesktop Label
+            MoveScaled(19,0,18,3)
+            Expand = True
+          }
+        }
+        { Panel29 HBox
+          MoveScaled(1,28,38,4)
+          { LabelKernelL TextLabel
+            MoveScaled(0,0,11,3)
+            Alignment = Align.Right
+          }
+          { Panel51 Panel
+            MoveScaled(16,0,1,3)
+          }
+          { LabelKernel Label
+            MoveScaled(19,0,18,3)
+            Expand = True
+          }
+        }
+        { Panel52 Panel
+          MoveScaled(2,34,34,2)
+          Expand = True
+        }
+        { HBox27 HBox
+          MoveScaled(0,37,33,4.5714)
+          Padding = 2
+          { Panel63 Panel
+            MoveScaled(1,1,1,2)
+          }
+          { LabelVersion Label
+            MoveScaled(5,1,8,2)
+            Expand = True
+          }
+        }
+      }
+      { HBox17 HBox
+        MoveScaled(0,59,39,0)
+        { Separator51 Separator
+          MoveScaled(2,1,13,0.2857)
+          Background = Color.Black
+          Expand = True
+        }
+      }
+    }
+    { HBox19 HBox
+      MoveScaled(84,0,0,42.8571)
+      { Separator53 Separator
+        MoveScaled(2,1,13,0.2857)
+        Background = Color.Black
+        Expand = True
+      }
+    }
+  }
+}

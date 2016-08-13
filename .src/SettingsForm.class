@@ -1,0 +1,200 @@
+' Gambas class file
+
+Public bColourFree As Boolean   'Which colour is being worked on. Free is False - Used is True
+Public iColourFree As Integer   'To hold the old colour in case the cancel button is selected
+Public iColourUsed As Integer   'To hold the old colour in case the cancel button is selected
+Public siProgressH As Short     'To hold the old Display bar height setting in case the cancel button is selected
+Public siHeight As Short        'To hold the old form height value in case the cancel button is selected
+Public siWidth As Short         'To hold the old form width value in case the cancel button is selected
+Public bDependencies As Boolean 'To hold the old 'show dependencies'value in case the cancel button is selected
+Public siOLDPoll As Short       'To hold the old poll delay time in case the cancel button is selected
+
+Public Sub Form_Open()
+
+Me.X = -50
+Timer1.Delay = 10
+Timer1.Enabled = True
+iColourUsed = FMain.iColourUsed
+iColourFree = FMain.iColourFree
+siProgressH = FMain.siProgressH
+siHeight = FMain.Height
+siWidth = FMain.Width
+bDependencies = FMain.bDontShowDependencies
+siOLDPoll = FMain.siPoll
+psStart
+
+End
+
+Public Sub psStart()
+
+siProgressH = FMain.siProgressH
+SeparatorUsed.Background = FMain.iColourUsed
+SeparatorFree.Background = FMain.iColourFree
+SliderDisplayBarHeight.value = FMain.siProgressH
+CheckBoxShowDependencies.value = bDependencies
+
+Select Case siOLDPoll
+  Case 125
+    RadioButton125.Value = True
+  Case 250
+    RadioButton250.Value = True
+  Case 500
+    RadioButton500.Value = True
+  Case 750
+    RadioButton750.Value = True
+  Case 1000
+    RadioButton1000.Value = True
+  Case 1500
+    RadioButton1500.Value = True
+End Select
+
+ButtonUsed_Click
+
+End
+
+Public Sub AllDelayRadioButtons_Click()
+Dim hRadioButtons As RadioButton[] = [RadioButton125, RadioButton250, RadioButton500, RadioButton750, RadioButton1000, RadioButton1500]
+Dim siWhichButton As Short[] = [125, 250, 500, 750, 1000, 1500]
+Dim siCount As Short
+Dim oTemp As Object
+
+oTemp = Last
+
+For siCount = 0 To 4
+  If oTemp = hRadioButtons[siCount] Then FMain.siPoll = siWhichButton[siCount]
+Next
+ 
+End
+
+Public Sub SliderDisplayBarHeight_Change()
+
+FMain.siProgressH = SliderDisplayBarHeight.value
+HBoxSettings.Height = 21 - FMain.siProgressH
+
+End
+
+Public Sub ColorChooser1_Change()
+
+If bColourFree Then 'Used
+  FMain.iColourUsed = ColorChooser1.Value
+  SeparatorUsed.Background = FMain.iColourUsed
+Else
+  FMain.iColourFree = ColorChooser1.Value
+  SeparatorFree.Background = FMain.iColourFree
+Endif
+
+End
+
+Public Sub ButtonFree_Click()
+
+bColourFree = False
+LabelChanging.text = "You are changing the 'Free' colours"
+ColorChooser1.Value = FMain.iColourFree
+
+End
+
+Public Sub ButtonUsed_Click()
+
+bColourFree = True
+LabelChanging.text = "You are changing the 'Used' colours"
+ColorChooser1.Value = FMain.iColourUsed
+
+End
+
+Public Sub ButtonBarHeightDefault_Click()
+
+SliderDisplayBarHeight.value = 5
+SliderDisplayBarHeight_Change
+
+End
+
+Public Sub ButtonSave_Click()
+
+FMain.bTimerTrigger = False
+Me.Close
+
+End
+
+Public Sub Form_Close()
+
+FMain.bTimerTrigger = False
+
+End
+
+Public Sub ButtonCancel_Click()
+
+FMain.iColourFree = iColourFree
+FMain.iColourUsed = iColourUsed
+FMain.siProgressH = siProgressH
+FMain.Height = siHeight
+FMain.Width = siWidth
+FMain.bDontShowDependencies = bDependencies
+FMain.siPoll = siOLDPoll
+Me.Close
+
+End
+
+Public Sub ButtonReset_Click()
+
+FMain.iColourUsed = &HFF0000&
+FMain.iColourFree = &HFFFF00&
+ButtonFree_Click
+ButtonUsed_Click
+
+End
+
+Public Sub ButtonReset2_Click()
+
+FMain.Height = 705
+FMain.Width = 865
+
+End
+
+Public Sub Timer1_Timer()
+
+If SliderDisplayBarHeight.value = 5 Then
+  ButtonBarHeightDefault.Enabled = False
+Else
+  ButtonBarHeightDefault.Enabled = True
+Endif
+
+If FMain.iColourUsed = &HFF0000& And FMain.iColourFree = &HFFFF00& Then
+  ButtonReset.Enabled = False
+Else
+  ButtonReset.Enabled = True
+End If
+
+If bColourFree Then
+  ButtonFree.Enabled = True
+  ButtonUsed.Enabled = False
+Else
+  ButtonFree.Enabled = False
+  ButtonUsed.Enabled = True
+Endif
+
+If FMain.Height = 705 And FMain.Width = 865 Then
+  ButtonReset2.Enabled = False
+Else
+  ButtonReset2.Enabled = True
+Endif
+
+End
+
+Public Sub ButtonDependencies_Click()
+
+Dependencies.Show
+
+End
+
+Public Sub CheckBoxShowDependencies_Click()
+
+FMain.bDontShowDependencies = CheckBoxShowDependencies.Value
+
+End
+
+Public Sub Form_Resize()
+
+FMain.bTimerTrigger = True
+
+End
+

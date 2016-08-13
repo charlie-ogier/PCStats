@@ -1,0 +1,33 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,64,64)
+  Icon = Picture["pcstats.png"]
+  Arrangement = Arrange.Vertical
+  Padding = 10
+  { HBox1 HBox
+    MoveScaled(3,2,58,4)
+    { LabelHelpTitle Label
+      MoveScaled(6,0,38,4)
+      Font = Font["Sans Serif,Bold"]
+      Expand = True
+      Alignment = Align.Center
+    }
+  }
+  { TextLabelHelp TextLabel
+    MoveScaled(5,12,49,38)
+    Expand = True
+    Padding = 5
+  }
+  { HBox2 HBox
+    MoveScaled(4,56,41,4)
+    { Panel1 Panel
+      MoveScaled(2,1,10,1)
+      Expand = True
+    }
+    { Button1 Button
+      MoveScaled(28,0,11,3)
+      Text = Shortcut(("Done"), "D")
+    }
+  }
+}

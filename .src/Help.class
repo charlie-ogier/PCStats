@@ -1,0 +1,25 @@
+' Gambas class file
+
+Public Sub Form_Open()
+Dim siHelp As Short = Dependencies.siWhatHelp
+
+Select Case siHelp
+  'For later use
+  'Case 1 
+    
+  Case 2 'sysstat
+    LabelHelpTitle.text = "Help for mpstat, part of the sysstat toolkit"
+    TextLabelHelp.text = "<b>For Debian based Distros (Debian/*buntu/Mint/Raspberry pi etc)</b><p><p>Option 1: Open the Software Manager/Center and search for <b>sysstat</b> and install<p><p>Option 2: " &
+    "Open Terminal and enter: <b>sudo apt-get -y install sysstat</b><p><p><b>For OpenSUSE</b><p><p>Open Terminal and type <b>sudo zypper in sysstat</b><p><p>" &
+    "<b>For Fedora</b><p><p>In a root Terminal upto Fedora version 21 enter <b>sudo yum install sysstat</b> or for Fedora 22 and later enter <b>sudo dnf install sysstat</b>"
+ 
+End Select
+  
+
+End
+
+Public Sub Button1_Click()
+
+Me.Close
+
+End

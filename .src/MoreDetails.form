@@ -1,0 +1,26 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,89,69)
+  Text = ("PCStats More details...")
+  Icon = Picture["pcstats.png"]
+  Arrangement = Arrange.Vertical
+  Padding = 10
+  { TextAreaMoreDetails TextArea
+    MoveScaled(4,4,31,31)
+    Expand = True
+    ReadOnly = True
+  }
+  { HBox1 HBox
+    MoveScaled(2,59,59,5)
+    Padding = 2
+    { Panel1 Panel
+      MoveScaled(3,1,6,2)
+      Expand = True
+    }
+    { Button1 Button
+      MoveScaled(43,0,14,4)
+      Text = Shortcut(("Done"), "D")
+    }
+  }
+}

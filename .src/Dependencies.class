@@ -1,0 +1,80 @@
+' Gambas class file
+
+Public siWhatHelp As Short 
+
+Public Sub form_Open()
+Dim sInstalled, sTemp As String
+Dim sIsItThere As String[] = ["df", "free", "uptime", "mpstat"]
+Dim hLabelD As Label[] = [LabelDep0, LabelDep1, LabelDep2, LabelDep3, LabelDep4, LabelDep5, LabelDep6]
+Dim hPictBox As PictureBox[] = [PictureBox0, PictureBox1, PictureBox2, PictureBox3, PictureBox4, PictureBox5, PictureBox6]
+Dim hButtonHelp As Button[] = [ButtonHelp0, ButtonHelp1, ButtonHelp2, ButtonHelp3, ButtonHelp4, ButtonHelp5, ButtonHelp6]
+Dim siCount As Short
+
+Dependencies.x = 3
+Dependencies.y = 3
+
+If FMain.bDontShowDependencies Then CheckBoxDontShow.Value = True
+
+For Each sInstalled In sIsItThere
+sTemp = ""  
+Shell sIsItThere[siCount] To sTemp
+If Not sTemp Then Shell sIsItThere[siCount] & " --help" To sTemp
+
+If sTemp Then
+  hLabelD[siCount].Text = sIsItThere[siCount] & " is installed"
+  hLabelD[siCount].Font.Bold = True
+  hPictBox[siCount].Picture = Picture.Load("ok.png")
+  hPictBox[siCount].Alignment = Align.Center
+  hButtonHelp[siCount].Visible = False
+Else
+  hLabelD[siCount].Text = sIsItThere[siCount] & " is NOT installed"
+  hLabelD[siCount].Font.Bold = True
+  hPictBox[siCount].Picture = Picture.Load("close.png")
+  hPictBox[siCount].Alignment = Align.Center
+  hButtonHelp[siCount].Visible = True
+  hButtonHelp[siCount].text = "&Help"
+Endif
+Inc siCount
+Next
+
+End
+
+Public Sub ButtonHelp0_Click()
+
+Message.Info("You shouldn't be here!!\nAs far as I know this dependency\nshould be installed by default in Linux", "OK")
+  
+End
+
+Public Sub ButtonHelp1_Click()
+
+ButtonHelp0_Click()
+
+End
+
+Public Sub ButtonHelp2_Click()
+
+ButtonHelp0_Click()
+
+End
+
+Public Sub ButtonHelp3_Click() 'mpstat
+
+siWhatHelp = 2
+Help.ShowModal
+siWhatHelp = 0
+form_Open
+
+End
+
+Public Sub ButtonOK_Click()
+
+Form_Close
+
+End
+
+Public Sub Form_Close()
+
+FMain.bDontShowDependencies = CheckBoxDontShow.Value
+Me.Close
+
+End
